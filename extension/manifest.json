@@ -1,0 +1,24 @@
+{
+  "name": "X ViewLess",
+  "version": "1.0.0",
+  "description": "Hide view counts on X (Twitter) and get AI-powered reply suggestions using OpenAI",
+  "manifest_version": 3,
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://api.openai.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["openai.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "options.html"
+}
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X ViewLess Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🌿 X ViewLess Settings</h1>
+      <p class="subtitle">Hide view counts and configure your AI reply assistant</p>
+    </header>
+
+    <form id="settings-form">
+      <section class="section">
+        <h2>API Configuration</h2>
+        
+        <div class="field">
+          <label for="apiKey">OpenAI API Key <span class="required">*</span></label>
+          <input type="password" id="apiKey" name="apiKey" placeholder="sk-..." autocomplete="off">
+          <small>Your API key is stored locally and never shared.</small>
+        </div>
+
+        <div class="field">
+          <label for="model">Model</label>
+          <input type="text" id="model" name="model" placeholder="gpt-4o">
+          <small>OpenAI model to use for generating replies.</small>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Prompts &amp; Context</h2>
+
+        <div class="field">
+          <label for="systemInstruction">System Instruction</label>
+          <textarea id="systemInstruction" name="systemInstruction" rows="5" placeholder="Instructions for the AI..."></textarea>
+          <small>Base instructions that guide how the AI writes replies.</small>
+        </div>
+
+        <div class="field">
+          <label for="personalContext">Personal Context</label>
+          <textarea id="personalContext" name="personalContext" rows="4" placeholder="Tell the AI about yourself, your interests, your writing style..."></textarea>
+          <small>This is your "memory" — background info the AI uses to personalize replies.</small>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Defaults</h2>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="defaultTone">Default Tone</label>
+            <select id="defaultTone" name="defaultTone">
+              <option value="Neutral">Neutral</option>
+              <option value="Friendly">Friendly</option>
+              <option value="Dry Sarcastic">Dry Sarcastic</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="defaultReplyStyle">Default Reply Style</label>
+            <select id="defaultReplyStyle" name="defaultReplyStyle">
+              <option value="Short">Short</option>
+              <option value="Medium">Medium</option>
+              <option value="Spicy">Spicy</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Generation Settings</h2>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="temperature">Temperature</label>
+            <input type="number" id="temperature" name="temperature" min="0" max="2" step="0.1" placeholder="0.7">
+            <small>0 = deterministic, 2 = very creative.</small>
+          </div>
+
+          <div class="field">
+            <label for="maxOutputTokens">Max Output Tokens</label>
+            <input type="number" id="maxOutputTokens" name="maxOutputTokens" min="10" max="1000" step="10" placeholder="120">
+            <small>Maximum tokens for the AI response.</small>
+          </div>
+
+          <div class="field">
+            <label for="characterLimit">Character Limit</label>
+            <input type="number" id="characterLimit" name="characterLimit" min="50" max="500" step="10" placeholder="280">
+            <small>Enforced when "Allow longer" is off.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Privacy &amp; Mental Health</h2>
+
+        <div class="field">
+          <label class="checkbox-label">
+            <input type="checkbox" id="hideViewCounts" name="hideViewCounts">
+            <span>Hide view counts on my own posts</span>
+          </label>
+          <small>Hides view counts on your posts to reduce anxiety. A button will appear to show them if needed.</small>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" id="save-btn">Save Settings</button>
+        <span id="status" class="status"></span>
+      </div>
+    </form>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
+

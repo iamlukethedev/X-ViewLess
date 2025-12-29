@@ -2,6 +2,8 @@
 
 Hide view counts on X (Twitter) and get AI-powered reply suggestions using OpenAI.
 
+![ViewLess](ViewLess.png)
+
 ## 🔒 Privacy & Security
 
 **Your data stays on your device. We don't store anything.**

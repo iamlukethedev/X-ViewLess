@@ -63,6 +63,8 @@ Everything is stored locally in your browser and only you have access to it.
    - **Max Output Tokens**: Maximum length of AI responses. Default: 120
    - **Character Limit**: Enforced when "Allow longer" is unchecked. Default: 280
    - **Hide view counts**: Toggle to hide view counts on your own posts
+   - **Hide my own follower count**: Toggle to hide the follower count on your own profile page
+   - **Hide other users' follower counts**: Toggle to hide follower counts when viewing other users' profile pages
 
 4. Click **Save Settings**
 
@@ -130,6 +132,27 @@ Everything is stored locally in your browser and only you have access to it.
    - Reduces anxiety from constantly checking view counts
    - Helps you focus on creating content rather than metrics
 
+### Using Follower Count Hiding
+
+1. **Enable the feature:**
+
+   - Go to extension options
+   - Check "Hide my own follower count" to hide follower counts on your profile
+   - Check "Hide other users' follower counts" to hide follower counts on other profiles
+   - Save settings
+
+2. **How it works:**
+
+   - Follower counts will be automatically hidden on profile pages based on your settings
+   - Works on your own profile when "Hide my own follower count" is enabled
+   - Works on other users' profiles when "Hide other users' follower counts" is enabled
+   - The hiding happens automatically when you visit a profile page
+
+3. **Privacy benefit:**
+   - Reduces comparison anxiety and social pressure
+   - Helps you focus on content and connections rather than numbers
+   - Creates a more mindful social media experience
+
 ## 📝 Important Notes
 
 - **This extension uses the OpenAI API directly** — it does not use ChatGPT consumer or ChatGPT Memories
@@ -162,6 +185,13 @@ Everything is stored locally in your browser and only you have access to it.
 - Refresh the page after enabling the setting
 - The feature only works on your own posts
 
+### Follower counts not hiding
+
+- **Solution**: Make sure the appropriate follower count hiding option is enabled in settings
+- Refresh the page after enabling the setting
+- Make sure you're on a profile page (not the home timeline)
+- The feature distinguishes between your own profile and other users' profiles based on your settings
+
 ### AI replies not generating
 
 - **Solution**: Check that your OpenAI API key is valid and has credits
@@ -193,4 +223,3 @@ This project is open source. Check the repository for license details.
 Made with 🌿 by X ViewLess
 
 Powered by [iamlukethedev](https://x.com/iamlukethedev)
-

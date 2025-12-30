@@ -23,6 +23,9 @@
   // Handle view count hiding for own posts - start immediately.
   initViewCountHiding();
 
+  // Handle follower count hiding - start immediately.
+  initFollowerCountHiding();
+
   /**
    * Scan the DOM for reply composers and inject buttons.
    */
@@ -2341,5 +2344,204 @@
         toggleBtn
       );
     }
+  }
+
+  /**
+   * Initialize follower count hiding.
+   */
+  async function initFollowerCountHiding() {
+    // Check if any follower hiding feature is enabled.
+    const settings = await chrome.storage.sync.get({
+      hideMyFollowers: false,
+      hideOtherFollowers: false,
+    });
+    if (!settings.hideMyFollowers && !settings.hideOtherFollowers) return;
+
+    // Get current user's handle.
+    const currentUserHandle = getCurrentUserHandle();
+    if (!currentUserHandle) {
+      // Retry if user handle not found yet.
+      setTimeout(initFollowerCountHiding, 500);
+      setTimeout(initFollowerCountHiding, 1000);
+      setTimeout(initFollowerCountHiding, 2000);
+      return;
+    }
+
+    console.log("[X ViewLess] Initializing follower count hiding");
+
+    // Process existing follower counts immediately.
+    processFollowerCounts(currentUserHandle, settings);
+
+    // Process again after short delays to catch late-loading content.
+    setTimeout(() => processFollowerCounts(currentUserHandle, settings), 100);
+    setTimeout(() => processFollowerCounts(currentUserHandle, settings), 300);
+    setTimeout(() => processFollowerCounts(currentUserHandle, settings), 500);
+    setTimeout(() => processFollowerCounts(currentUserHandle, settings), 1000);
+
+    // Observe for changes (profile page navigation, dynamic loading).
+    const followerCountObserver = new MutationObserver(
+      debounce(() => {
+        processFollowerCounts(currentUserHandle, settings);
+      }, 200)
+    );
+    followerCountObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  /**
+   * Process follower counts on profile pages.
+   */
+  function processFollowerCounts(currentUserHandle, settings) {
+    // Check if we're on a profile page (could be /username or /username/followers, etc.).
+    const pathMatch = window.location.pathname.match(/^\/([^\/\?]+)/);
+    if (!pathMatch) return;
+
+    const username = pathMatch[1];
+    
+    // Skip known routes that aren't profile pages.
+    const knownRoutes = [
+      "home",
+      "explore",
+      "notifications",
+      "messages",
+      "i",
+      "compose",
+      "bookmarks",
+      "communities",
+      "verified",
+    ];
+    if (knownRoutes.includes(username.toLowerCase())) return;
+
+    // Get the profile handle from URL.
+    const profileHandle = "@" + username;
+    const isOwnProfile =
+      profileHandle.toLowerCase() === currentUserHandle.toLowerCase();
+
+    // Determine if we should hide based on settings.
+    const shouldHide =
+      (isOwnProfile && settings.hideMyFollowers) ||
+      (!isOwnProfile && settings.hideOtherFollowers);
+
+    if (!shouldHide) return;
+
+    // Find follower count elements.
+    const followerCountElements = findAllFollowerCountElements();
+
+    followerCountElements.forEach((element) => {
+      // Skip if already processed.
+      if (element.hasAttribute("data-xviewless-follower-processed")) return;
+
+      // Hide the element.
+      element.style.display = "none";
+      element.setAttribute("data-xviewless-follower-processed", "true");
+      element.setAttribute("data-xviewless-follower-hidden", "true");
+    });
+  }
+
+  /**
+   * Find all follower count elements on the page.
+   */
+  function findAllFollowerCountElements() {
+    const elements = [];
+    const processed = new Set();
+
+    // Method 1: Look for links/buttons containing "Followers" text.
+    const allLinks = document.querySelectorAll('a[href*="/followers"], a[href*="/following"]');
+    allLinks.forEach((link) => {
+      if (processed.has(link)) return;
+
+      const text = link.textContent.trim();
+      // Match patterns like "1,864 Followers", "487 Following", etc.
+      if (text.match(/\d+[\d.,KMB]*\s*(Followers?|Following)/i)) {
+        // Check if this is the follower count (not following count).
+        if (text.match(/Followers?/i) && !text.match(/Following/i)) {
+          elements.push(link);
+          processed.add(link);
+        }
+      }
+    });
+
+    // Method 2: Look for elements with aria-label containing "Followers".
+    const ariaElements = document.querySelectorAll('[aria-label*="Followers" i]');
+    ariaElements.forEach((el) => {
+      if (processed.has(el)) return;
+
+      const ariaLabel = el.getAttribute("aria-label") || "";
+      const text = el.textContent.trim();
+
+      // Check if it's a follower count (not following).
+      if (
+        ariaLabel.match(/Followers?/i) &&
+        !ariaLabel.match(/Following/i) &&
+        text.match(/\d+[\d.,KMB]*/)
+      ) {
+        elements.push(el);
+        processed.add(el);
+      }
+    });
+
+    // Method 3: Look for spans/divs with follower count pattern in profile stats section.
+    const profileStats = document.querySelectorAll(
+      '[data-testid="UserProfileStats"], [role="group"]'
+    );
+    profileStats.forEach((statsContainer) => {
+      const statsLinks = statsContainer.querySelectorAll("a, span, div");
+      statsLinks.forEach((el) => {
+        if (processed.has(el)) return;
+
+        const text = el.textContent.trim();
+        // Match "X Followers" pattern.
+        const match = text.match(/^(\d+[\d.,KMB]*)\s*(Followers?)$/i);
+        if (match) {
+          elements.push(el);
+          processed.add(el);
+        }
+      });
+    });
+
+    // Method 4: Look for specific test IDs or classes that might contain follower counts.
+    const testIdElements = document.querySelectorAll(
+      '[data-testid*="follower"], [data-testid*="Follower"]'
+    );
+    testIdElements.forEach((el) => {
+      if (processed.has(el)) return;
+
+      const text = el.textContent.trim();
+      if (text.match(/\d+[\d.,KMB]*\s*Followers?/i)) {
+        elements.push(el);
+        processed.add(el);
+      }
+    });
+
+    // Method 5: Search for text patterns in the profile header area.
+    const profileHeader = document.querySelector('[data-testid="UserProfileHeader"]') ||
+                          document.querySelector('div[role="main"]') ||
+                          document.body;
+    
+    if (profileHeader) {
+      const allTextElements = profileHeader.querySelectorAll("span, div, a");
+      allTextElements.forEach((el) => {
+        if (processed.has(el)) return;
+
+        const text = el.textContent.trim();
+        // Match exact "X Followers" pattern (not "Following").
+        const match = text.match(/^(\d+[\d.,KMB]*)\s*(Followers?)$/i);
+        if (match && !text.match(/Following/i)) {
+          // Make sure it's not part of a larger text block.
+          const parentText = el.parentElement?.textContent?.trim() || "";
+          if (
+            parentText === text ||
+            parentText.match(/^\d+[\d.,KMB]*\s*Followers?$/i)
+          ) {
+            elements.push(el);
+            processed.add(el);
+          }
+        }
+      });
+    }
+
+    return elements;
   }
 })();

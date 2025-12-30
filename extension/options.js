@@ -13,6 +13,8 @@ const DEFAULTS = {
   maxOutputTokens: 120,
   characterLimit: 280,
   hideViewCounts: false,
+  hideMyFollowers: false,
+  hideOtherFollowers: false,
 };
 
 // Load settings on page open.
@@ -45,6 +47,10 @@ async function loadSettings() {
       stored.characterLimit ?? DEFAULTS.characterLimit;
     document.getElementById("hideViewCounts").checked =
       stored.hideViewCounts ?? DEFAULTS.hideViewCounts;
+    document.getElementById("hideMyFollowers").checked =
+      stored.hideMyFollowers ?? DEFAULTS.hideMyFollowers;
+    document.getElementById("hideOtherFollowers").checked =
+      stored.hideOtherFollowers ?? DEFAULTS.hideOtherFollowers;
   } catch (error) {
     console.error("X ViewLess: Failed to load settings:", error);
   }
@@ -82,6 +88,8 @@ async function saveSettings(event) {
         DEFAULTS.characterLimit
     ),
     hideViewCounts: document.getElementById("hideViewCounts").checked,
+    hideMyFollowers: document.getElementById("hideMyFollowers").checked,
+    hideOtherFollowers: document.getElementById("hideOtherFollowers").checked,
   };
 
   try {

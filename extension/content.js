@@ -29,7 +29,25 @@
   /**
    * Scan the DOM for reply composers and inject buttons.
    */
-  function scanForComposers() {
+  async function scanForComposers() {
+    // Check if AI Reply button is enabled.
+    const settings = await chrome.storage.sync.get({
+      showAIReplyButton: false,
+    });
+    if (!settings.showAIReplyButton) {
+      // Remove any existing buttons if setting is disabled.
+      const existingButtons = document.querySelectorAll(".xviewless-btn");
+      existingButtons.forEach((btn) => btn.remove());
+      // Remove markers so buttons can be re-added if setting is re-enabled.
+      const markedComposers = document.querySelectorAll(
+        '[data-xviewless-injected="true"]'
+      );
+      markedComposers.forEach((composer) =>
+        composer.removeAttribute("data-xviewless-injected")
+      );
+      return;
+    }
+
     // Look for contenteditable textboxes used as composers.
     const composers = document.querySelectorAll(
       '[role="textbox"][contenteditable="true"]'
@@ -2399,7 +2417,7 @@
     if (!pathMatch) return;
 
     const username = pathMatch[1];
-    
+
     // Skip known routes that aren't profile pages.
     const knownRoutes = [
       "home",
@@ -2448,7 +2466,9 @@
     const processed = new Set();
 
     // Method 1: Look for links/buttons containing "Followers" text.
-    const allLinks = document.querySelectorAll('a[href*="/followers"], a[href*="/following"]');
+    const allLinks = document.querySelectorAll(
+      'a[href*="/followers"], a[href*="/following"]'
+    );
     allLinks.forEach((link) => {
       if (processed.has(link)) return;
 
@@ -2464,7 +2484,9 @@
     });
 
     // Method 2: Look for elements with aria-label containing "Followers".
-    const ariaElements = document.querySelectorAll('[aria-label*="Followers" i]');
+    const ariaElements = document.querySelectorAll(
+      '[aria-label*="Followers" i]'
+    );
     ariaElements.forEach((el) => {
       if (processed.has(el)) return;
 
@@ -2516,10 +2538,11 @@
     });
 
     // Method 5: Search for text patterns in the profile header area.
-    const profileHeader = document.querySelector('[data-testid="UserProfileHeader"]') ||
-                          document.querySelector('div[role="main"]') ||
-                          document.body;
-    
+    const profileHeader =
+      document.querySelector('[data-testid="UserProfileHeader"]') ||
+      document.querySelector('div[role="main"]') ||
+      document.body;
+
     if (profileHeader) {
       const allTextElements = profileHeader.querySelectorAll("span, div, a");
       allTextElements.forEach((el) => {

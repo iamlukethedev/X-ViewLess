@@ -12,6 +12,7 @@ const DEFAULTS = {
   temperature: 0.7,
   maxOutputTokens: 120,
   characterLimit: 280,
+  showAIReplyButton: false,
   hideViewCounts: false,
   hideMyFollowers: false,
   hideOtherFollowers: false,
@@ -45,6 +46,8 @@ async function loadSettings() {
       stored.maxOutputTokens ?? DEFAULTS.maxOutputTokens;
     document.getElementById("characterLimit").value =
       stored.characterLimit ?? DEFAULTS.characterLimit;
+    document.getElementById("showAIReplyButton").checked =
+      stored.showAIReplyButton ?? DEFAULTS.showAIReplyButton;
     document.getElementById("hideViewCounts").checked =
       stored.hideViewCounts ?? DEFAULTS.hideViewCounts;
     document.getElementById("hideMyFollowers").checked =
@@ -87,6 +90,7 @@ async function saveSettings(event) {
       parseInt(document.getElementById("characterLimit").value, 10) ||
         DEFAULTS.characterLimit
     ),
+    showAIReplyButton: document.getElementById("showAIReplyButton").checked,
     hideViewCounts: document.getElementById("hideViewCounts").checked,
     hideMyFollowers: document.getElementById("hideMyFollowers").checked,
     hideOtherFollowers: document.getElementById("hideOtherFollowers").checked,

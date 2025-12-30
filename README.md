@@ -62,6 +62,7 @@ Everything is stored locally in your browser and only you have access to it.
    - **Temperature**: Controls creativity (0 = deterministic, 2 = very creative). Default: 0.7
    - **Max Output Tokens**: Maximum length of AI responses. Default: 120
    - **Character Limit**: Enforced when "Allow longer" is unchecked. Default: 280
+   - **Show AI Reply button**: Toggle to show or hide the AI Reply button in reply composers. Default: hidden
    - **Hide view counts**: Toggle to hide view counts on your own posts
    - **Hide my own follower count**: Toggle to hide the follower count on your own profile page
    - **Hide other users' follower counts**: Toggle to hide follower counts when viewing other users' profile pages
@@ -72,21 +73,27 @@ Everything is stored locally in your browser and only you have access to it.
 
 ### Using AI Reply Suggestions
 
-1. **Navigate to X (Twitter):**
+1. **Enable the AI Reply button:**
+
+   - Go to extension options
+   - Check "Show AI Reply button"
+   - Save settings
+
+2. **Navigate to X (Twitter):**
 
    - Go to [x.com](https://x.com) and log in
 
-2. **Open a reply composer:**
+3. **Open a reply composer:**
 
    - Click the reply button on any tweet
    - The reply composer will open
 
-3. **Find the AI Reply button:**
+4. **Find the AI Reply button:**
 
    - Look for the green **AI Reply** button near the composer actions (usually next to the "Post" button)
    - The button appears automatically when you open a reply composer
 
-4. **Generate a reply:**
+5. **Generate a reply:**
 
    - Click the **AI Reply** button
    - The X ViewLess modal will open
@@ -96,19 +103,19 @@ Everything is stored locally in your browser and only you have access to it.
      - Your default tone and style settings
      - Your personal context (if configured)
 
-5. **Customize the reply:**
+6. **Customize the reply:**
 
    - **Tone**: Change between Neutral, Friendly, or Dry Sarcastic
    - **Style**: Adjust between Short, Medium, or Spicy
    - **Allow longer**: Uncheck to enforce your character limit
    - **Regenerate**: Click to generate a new reply with the same settings
 
-6. **Edit if needed:**
+7. **Edit if needed:**
 
    - The generated reply is editable — feel free to modify it
    - The textarea supports full editing
 
-7. **Insert and post:**
+8. **Insert and post:**
    - Click **Insert into X** to paste the reply into the composer
    - Review the reply in the composer
    - Post when ready!
@@ -170,7 +177,8 @@ Everything is stored locally in your browser and only you have access to it.
 
 ### Button not appearing
 
-- **Solution**: Refresh the page; X's UI is dynamic and the observer may need a moment to detect the composer
+- **Solution**: Make sure "Show AI Reply button" is enabled in extension settings
+- Refresh the page; X's UI is dynamic and the observer may need a moment to detect the composer
 - Try closing and reopening the reply composer
 - Make sure you're on x.com (not twitter.com)
 
